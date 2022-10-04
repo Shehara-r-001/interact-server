@@ -14,9 +14,9 @@ export const cookie = (user: TUser, res: Response) => {
     httpOnly: true,
   };
 
-  user.password = undefined;
   res.status(200).cookie('cookie', token, options).json({
     success: true,
+    user_email: user.email,
     token,
   });
 };

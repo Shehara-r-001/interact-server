@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { hashPassword } from '../helpers/hashPassword';
 import { prisma } from '../prisma/index';
 import { cookie } from '../utils/cookie';
 
@@ -6,24 +7,28 @@ export const signUpUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    // find whether the user exist
-    // const searchUser = await prisma.user.findUnique({
-    //   where: {
-    //     email: email,
-    //   },
-    // });
+    const hPassword = await hashPassword(password);
 
-    // encript the password before create the user
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password,
+    // find whether the user exist
+    const searchUser = await prisma.user.findUnique({
+      where: {
+        email: email,
       },
     });
 
-    // send to the cookie
-    cookie(user, res);
+    if (!searchUser) {
+      const user = await prisma.user.create({
+        data: {
+          email,
+          password: hPassword,
+        },
+      });
+
+      cookie(user, res);
+    } else {
+      res.status(400).json({ error: 'User aleady exists..!' });
+    }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
