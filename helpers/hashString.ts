@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
 
-export const hashPassword = (password: string) => {
+export const hashString = (password: string) => {
   return bcrypt.hash(password, 10);
 };

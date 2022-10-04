@@ -1,15 +1,19 @@
 import { Request, Response } from 'express';
-import { hashPassword } from '../helpers/hashPassword';
+import { hashString } from '../helpers/hashString';
 import { prisma } from '../prisma/index';
 import { cookie } from '../utils/cookie';
 
 export const signUpUser = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
-    const hPassword = await hashPassword(password);
+    const hPassword = await hashString(password);
 
-    // find whether the user exist
+    let userRole: string;
+
+    if (role === 'Sell') userRole = 'SELLER';
+    else userRole = 'BUYER';
+
     const searchUser = await prisma.user.findUnique({
       where: {
         email: email,
@@ -21,6 +25,7 @@ export const signUpUser = async (req: Request, res: Response) => {
         data: {
           email,
           password: hPassword,
+          role: userRole as any,
         },
       });
 
