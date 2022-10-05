@@ -32,7 +32,7 @@ export const signUpUser = async (req: Request, res: Response) => {
 
       cookie(user, res);
     } else {
-      res.status(400).json({ error: 'User aleady exists..!' });
+      res.status(403).json({ error: 'User already exist..! Please signin..' });
     }
   } catch (error) {
     console.error(error);
@@ -49,11 +49,17 @@ export const loginUser = async (req: Request, res: Response) => {
       },
     });
 
-    if (!user) res.status(404).json({ error: 'User does not exist..!' });
+    if (!user)
+      return res
+        .status(404)
+        .json({ error: 'User does not exist. Please login first' });
     else {
       const isMatch = await bcrypt.compare(password, user?.password);
 
-      if (!isMatch) return res.status(403).json({ error: 'wrong password..!' });
+      if (!isMatch)
+        return res
+          .status(403)
+          .json({ error: 'Email and password does not match..!' });
 
       cookie(user, res);
     }
