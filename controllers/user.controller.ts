@@ -32,7 +32,10 @@ export const signUpUser = async (req: Request, res: Response) => {
 
       cookie(user, res);
     } else {
-      res.status(403).json({ error: 'User already exist..! Please signin..' });
+      res.status(403).json({
+        success: false,
+        error: 'User already exist..! Please signin..',
+      });
     }
   } catch (error) {
     console.error(error);
@@ -50,20 +53,46 @@ export const loginUser = async (req: Request, res: Response) => {
     });
 
     if (!user)
-      return res
-        .status(404)
-        .json({ error: 'User does not exist. Please login first' });
+      return res.status(404).json({
+        success: false,
+        error: 'User does not exist. Please login first',
+      });
     else {
       const isMatch = await bcrypt.compare(password, user?.password);
 
       if (!isMatch)
-        return res
-          .status(403)
-          .json({ error: 'Email and password does not match..!' });
+        return res.status(403).json({
+          success: false,
+          error: 'Email and password does not match..!',
+        });
 
       cookie(user, res);
     }
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const getUserByEmail = async (req: Request, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: req.params.email,
+      },
+    });
+
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, error: 'User cannot be found..!' });
+    else {
+      const { password, ...rest } = user;
+      return res.status(200).json({ success: true, data: rest });
+    }
+  } catch (error) {
+    // console.error(error);
+    return res
+      .status(404)
+      .json({ success: false, error: 'User cannot be found..!' });
   }
 };
