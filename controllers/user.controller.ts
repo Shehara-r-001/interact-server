@@ -3,6 +3,7 @@ import { hashString } from '../helpers/hashString';
 import { prisma } from '../prisma/index';
 import { cookie } from '../utils/cookie';
 import bcrypt from 'bcryptjs';
+import { VerifyTokenRequest } from '../interfaces';
 
 export const signUpUser = async (req: Request, res: Response) => {
   try {
@@ -91,6 +92,29 @@ export const getUserByEmail = async (req: Request, res: Response) => {
     }
   } catch (error) {
     // console.error(error);
+    return res
+      .status(404)
+      .json({ success: false, error: 'User cannot be found..!' });
+  }
+};
+
+export const getUser = async (req: VerifyTokenRequest, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: req.payload,
+      },
+    });
+
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, error: 'User cannot be found..!' });
+    else {
+      const { password, ...rest } = user;
+      return res.status(200).json({ success: true, user: rest });
+    }
+  } catch (error) {
     return res
       .status(404)
       .json({ success: false, error: 'User cannot be found..!' });

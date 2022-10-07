@@ -8,7 +8,7 @@ type TUser = {
 };
 
 export const cookie = (user: TUser, res: Response) => {
-  const token = getJWT(user.id);
+  const token = getJWT(user.email);
   const options = {
     expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
     httpOnly: true,
