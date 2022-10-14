@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.route';
+import productsRouter from './routes/product.route';
+import categoryRouter from './routes/category.route';
 import cors from 'cors';
 
 dotenv.config();
@@ -16,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/api/user', userRouter);
+app.use('/api/products', productsRouter);
+app.use('/api/categories', categoryRouter);
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('Hello');
