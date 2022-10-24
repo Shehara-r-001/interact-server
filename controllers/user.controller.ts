@@ -88,7 +88,7 @@ export const getUserByEmail = async (req: Request, res: Response) => {
         .json({ success: false, error: 'User cannot be found..!' });
     else {
       const { password, ...rest } = user;
-      return res.status(200).json({ success: true, data: rest });
+      return res.status(200).json({ success: true, user: rest });
     }
   } catch (error) {
     // console.error(error);
