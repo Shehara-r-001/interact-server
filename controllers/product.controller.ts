@@ -72,3 +72,16 @@ export const getProductByCategory = async (req: Request, res: Response) => {
     return res.status(400).json({ success: false, error: 'Bad request..!' });
   }
 };
+
+export const getProduct = async (req: Request, res: Response) => {
+  try {
+    const productId = req.params.id;
+
+    res.status(200).json(productId);
+  } catch (error) {}
+};
+
+export const getProductsByUser = async (req: Request, res: Response) => {
+  try {
+  } catch (error) {}
+};
