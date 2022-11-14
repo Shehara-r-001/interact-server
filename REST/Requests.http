@@ -1,0 +1,11 @@
+// show all the categories
+# GET http://localhost:3333/api/categories/all HTTP/1.1
+
+// products by category
+# GET http://localhost:3333/api/products/category?cat=Cakes HTTP/1.1
+
+// products by user
+GET http://localhost:3333/api/products/users?seller=633f002a2cfe393b1479b3b9
+
+// find product
+# GET http://localhost:3333/api/products/find/63496fd16886f257fb7d3c57

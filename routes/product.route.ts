@@ -4,6 +4,7 @@ import {
   getAllProducts,
   getProduct,
   getProductByCategory,
+  getProductsByUser,
 } from '../controllers/product.controller';
 
 const router = express.Router();
@@ -17,5 +18,7 @@ router.get('/category', getProductByCategory);
 router.get('/find/:id', getProduct);
 
 router.get('/category/:cat', getProductByCategory);
+
+router.get('/users', getProductsByUser);
 
 export default router;

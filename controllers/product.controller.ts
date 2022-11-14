@@ -66,6 +66,20 @@ export const getProductByCategory = async (req: Request, res: Response) => {
       where: {
         categoryId: category?.id,
       },
+      include: {
+        owner: {
+          select: {
+            name: true,
+            image: true,
+            email: true,
+          },
+        },
+        Category: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
     return res.status(200).json({ success: true, data: products });
   } catch (error) {
@@ -77,11 +91,51 @@ export const getProduct = async (req: Request, res: Response) => {
   try {
     const productId = req.params.id;
 
-    res.status(200).json(productId);
-  } catch (error) {}
+    const product = await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+      include: {
+        owner: {
+          select: {
+            name: true,
+            image: true,
+            email: true,
+          },
+        },
+        Category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({ success: true, product });
+  } catch (error) {
+    res.status(400).json({ success: false, error: 'Bad request..!' });
+  }
 };
 
 export const getProductsByUser = async (req: Request, res: Response) => {
   try {
-  } catch (error) {}
+    const userID = req.query.seller as string;
+
+    const products = await prisma.product.findMany({
+      where: {
+        ownerId: userID,
+      },
+      include: {
+        Category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({ success: true, products });
+  } catch (error) {
+    res.status(400).json({ success: false, error: 'Bad request..!' });
+  }
 };
