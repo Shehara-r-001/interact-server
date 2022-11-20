@@ -120,3 +120,23 @@ export const getUser = async (req: VerifyTokenRequest, res: Response) => {
       .json({ success: false, error: 'User cannot be found..!' });
   }
 };
+
+export const updateUser = async (req: VerifyTokenRequest, res: Response) => {
+  const { name, bio, image } = req.body;
+
+  try {
+    await prisma.user.update({
+      where: {
+        email: req.payload,
+      },
+      data: {
+        name,
+        bio,
+        image,
+      },
+    });
+    res.status(200).json({ success: true, data: { name, bio, image } });
+  } catch (error) {
+    res.status(400).json({ success: false, error: 'Something went wrong..!' });
+  }
+};

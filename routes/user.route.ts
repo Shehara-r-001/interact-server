@@ -4,6 +4,7 @@ import {
   getUserByEmail,
   loginUser,
   signUpUser,
+  updateUser,
 } from '../controllers/user.controller';
 import { verifyToken } from '../middleware/verifyToken';
 
@@ -17,5 +18,8 @@ router.get('/getUser/:email', getUserByEmail);
 
 // @ts-ignore
 router.get('/verify', verifyToken, getUser);
+
+// @ts-ignore
+router.put('/update', verifyToken, updateUser);
 
 export default router;
